@@ -87,3 +87,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Config. Only template file should be cloned/pushed
+config.json
