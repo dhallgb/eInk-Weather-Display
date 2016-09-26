@@ -1,3 +1,7 @@
 {
-  "GoogleAPI": "243kl5j23lkjdl2lk3j0l234lskdjlfkj",
+  "GoogleAPIkey": "243kl5j23lkjdl2lk3j0l234lskdjlfkj",
+  "OpenweatherAPIkey": "adsf09823klsd843lksd8lmksdjlksdio3lksdjfo", 
+  "Openweathercity": "2641111",
+  "SSID": "ssid",
+  "Wifipassword": "password"
 }
