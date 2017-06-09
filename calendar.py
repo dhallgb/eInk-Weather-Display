@@ -2,6 +2,7 @@
 #
 # Minimal weather calendar for the Waveshare 4.3 inch e-ink display
 # Gets the weather data from OpenWeatherMap, and calendar data from Google.
+# Now getting it from Wunderground, via API
 #
 # This runs on the WiPy 2.0, and due to the use of floats will not work on the WiPy 1.0.
 #
@@ -102,10 +103,36 @@ def draw_structure():
     eink_draw_line(300,500,799,500)
     eink_update()
 
-def get_weather():
+def get_owm_weather():
     pt1 = "http://api.openweathermap.org/data/2.5/weather?id="
     pt2 = "&units=metric&cnt=3&appid="
     url = pt1+cfg["Openweathercity"]+pt2+cfg["OpenWeatherAPI"]
+    req = urlopen(url)
+    ret = req.read()
+    print(ret)
+    weather = ret.decode("utf-8")
+    #    weather_json = ujson.loads(weather, parse_float=parseFloat)
+    weather_json = ujson.loads(weather)
+    temp = round(weather_json["main"]["temp"])
+    wind = round(weather_json["wind"]["speed"])
+    humidity = weather_json["main"]["humidity"]
+    description = weather_json["weather"][0]["description"]
+    pressure = weather_json["main"]["pressure"]
+    iconid = weather_json["weather"][0]["id"]
+    #   
+    #   Content handlers don't appear to work in ujson. So we mung them.
+    #    temp = mungWeather(weather, '"temp":')
+    #    wind = mungWeather(weather, '"speed":')
+    #    humidity = mungWeather(weather, '"humidity":',',')
+    #    description = mungWeather(weather, '"description":',',')
+    #    pressure = mungWeather(weather, '"pressure":')
+    return(temp, wind, humidity, description, pressure, iconid)
+
+def get_wug_weather():
+    pt1 = "http://api.wunderground.com/api/"
+    pt2 = "/q/"
+#    url = pt1+cfg["Openweathercity"]+pt2+cfg["OpenWeatherAPI"]
+    url = pt1+cfg["WundergroundAPI"]+pt2+cfg["WundergroundCity"]
     req = urlopen(url)
     ret = req.read()
     print(ret)
@@ -133,8 +160,8 @@ def get_calendar():
 def main():
     setup()
     draw_structure()
-    while True:
-        w=get_weather()
+#    while True:
+        w=get_owm_weather()
         v=owmicons.interpret_icons(str(w[5]))
         eink_set_en_font(ASCII32)
         eink_disp_string(v["label"], 50, 250)
@@ -142,7 +169,7 @@ def main():
         eink_set_en_font(ASCII64)
         eink_disp_string(str(w[0]), 100, 350)
         eink_update()
-        sleep(10)
+#        sleep(10)
 #    machine.deepsleep(10000)
 #    print(machine.reset_cause())
 
