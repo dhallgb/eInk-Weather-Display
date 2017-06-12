@@ -11,6 +11,7 @@ from eInk import *
 from time import sleep
 from weathericons import interpret_icons
 import machine
+import ujson
 import urequests as requests
 CONFIG = 'config.json'
 service = 'weatherunderground'
@@ -111,6 +112,7 @@ def get_weather(service):
         url = pt1+cfg["Openweathercity"]+pt2+cfg["OpenWeatherAPI"]
         r = requests.get(url)
         weather_json = r.json()
+        r.close()
         temp = round(weather_json["main"]["temp"])
         wind = round(weather_json["wind"]["speed"])
         humidity = weather_json["main"]["humidity"]
@@ -123,16 +125,21 @@ def get_weather(service):
         url = pt1+cfg["WundergroundAPI"]+pt2+cfg["WundergroundCity"]+".json"
         r = requests.get(url)
         weather_json = r.json()
+        r.close()
         temperature = weather_json["current_observation"]["temp_c"]
         wind = weather_json["current_observation"]["wind_kph"]
         humidity = weather_json["current_observation"]["relative_humidity"]
         description = weather_json["current_observation"]["weather"]
         pressure = weather_json["current_observation"]["pressure_mb"]
         iconid = weather_json["current_observation"]["icon"]
-        r.close()
+        forecast = {}
+        for i in range(1,4):
+            forecast[i] = {}
+            forecast[i]["high"] = weather_json["forecast"]["simpleforecast"]["forecastday"][i]["high"]["celsius"]
+            forecast[i]["low"]  = weather_json["forecast"]["simpleforecast"]["forecastday"][i]["low"]["celsius"]
     else:
         print("Error: invalid service selected")
-    return(temperature, wind, humidity, description, pressure, iconid)
+    return(temperature, wind, humidity, description, pressure, iconid, forecast)
 
 def get_calendar():
     pass
@@ -142,11 +149,17 @@ def main():
     draw_structure()
     w=get_weather(service)
     v=interpret_icons(service,str(w[5]))
+    print(w)
     eink_set_en_font(ASCII32)
     eink_disp_string(v["label"], 50, 250)
     eink_disp_bitmap(v["icon"]+'.BMP', 100, 100)
     eink_set_en_font(ASCII64)
     eink_disp_string(str(w[0]), 100, 350)
+    for i in range(1,4):
+        y = ((i*2)-1)*100
+        eink_disp_string(w[6][i]["low"],400,y)
+        eink_disp_string(w[6][i]["high"],600,y)
+
     eink_update()
 
 main()
