@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 #
 # Minimal weather calendar for the Waveshare 4.3 inch e-ink display
-# Gets the weather data from OpenWeatherMap, and calendar data from Google.
-# Now getting it from Wunderground, via API
+# This runs on the WiPy 2.0; floats will not work on the WiPy 1.0. 
+# May work on other mPython boards.
 #
-# This runs on the WiPy 2.0, and due to the use of floats will not work on the WiPy 1.0.
+# Gets the weather data from various weather services.
+# TBD: get calendar data from Google.
 #
 from eInk import *
 from time import sleep
 from weathericons import interpret_icons
 import machine
-import ujson
-import usocket
+import urequests as requests
 CONFIG = 'config.json'
 service = 'weatherunderground'
 Tx='G12'
@@ -21,7 +21,7 @@ uartnum=1
 def parseFloat(f):
     return(int(f.split('.')[0]))
 
-def urlopen(url, data=None, method="GET"):
+#def urlopen(url, data=None, method="GET"):
     if data is not None and method == "GET":
         method = "POST"
     try:
@@ -96,11 +96,8 @@ def setup():
 
 def draw_structure():
     eink_draw_line(300,0,300,599)
-    eink_draw_line(300,100,799,100)
     eink_draw_line(300,200,799,200)
-    eink_draw_line(300,300,799,300)
     eink_draw_line(300,400,799,400)
-    eink_draw_line(300,500,799,500)
     eink_update()
 
 def get_weather(service):
@@ -112,10 +109,8 @@ def get_weather(service):
         pt1 = "http://api.openweathermap.org/data/2.5/weather?id="
         pt2 = "&units=metric&cnt=3&appid="
         url = pt1+cfg["Openweathercity"]+pt2+cfg["OpenWeatherAPI"]
-        req = urlopen(url)
-        ret = req.read()
-        weather = ret.decode("utf-8")
-        weather_json = ujson.loads(weather)
+        r = requests.get(url)
+        weather_json = r.json()
         temp = round(weather_json["main"]["temp"])
         wind = round(weather_json["wind"]["speed"])
         humidity = weather_json["main"]["humidity"]
@@ -126,19 +121,18 @@ def get_weather(service):
         pt1 = "http://api.wunderground.com/api/"
         pt2 = "/forecast/conditions/q/"
         url = pt1+cfg["WundergroundAPI"]+pt2+cfg["WundergroundCity"]+".json"
-        req = urlopen(url)
-        ret = req.read()
-        weather = ret.decode("utf-8")
-        weather_json = ujson.loads(weather)
-        temp = weather_json["current_observation"]["temp_c"]
+        r = requests.get(url)
+        weather_json = r.json()
+        temperature = weather_json["current_observation"]["temp_c"]
         wind = weather_json["current_observation"]["wind_kph"]
         humidity = weather_json["current_observation"]["relative_humidity"]
         description = weather_json["current_observation"]["weather"]
         pressure = weather_json["current_observation"]["pressure_mb"]
         iconid = weather_json["current_observation"]["icon"]
+        r.close()
     else:
         print("Error: invalid service selected")
-    return(temp, wind, humidity, description, pressure, iconid)
+    return(temperature, wind, humidity, description, pressure, iconid)
 
 def get_calendar():
     pass
