@@ -8,15 +8,15 @@
 #
 from eInk import *
 from time import sleep
-import owmicons
+from weathericons import interpret_icons
 import machine
 import ujson
 import usocket
+CONFIG = 'config.json'
+service = 'weatherunderground'
 Tx='G12'
 Rx='G13'
 uartnum=1
-
-CONFIG = 'config.json'
 
 def parseFloat(f):
     return(int(f.split('.')[0]))
@@ -103,55 +103,41 @@ def draw_structure():
     eink_draw_line(300,500,799,500)
     eink_update()
 
-def get_owm_weather():
-    pt1 = "http://api.openweathermap.org/data/2.5/weather?id="
-    pt2 = "&units=metric&cnt=3&appid="
-    url = pt1+cfg["Openweathercity"]+pt2+cfg["OpenWeatherAPI"]
-    req = urlopen(url)
-    ret = req.read()
-    print(ret)
-    weather = ret.decode("utf-8")
-    #    weather_json = ujson.loads(weather, parse_float=parseFloat)
-    weather_json = ujson.loads(weather)
-    temp = round(weather_json["main"]["temp"])
-    wind = round(weather_json["wind"]["speed"])
-    humidity = weather_json["main"]["humidity"]
-    description = weather_json["weather"][0]["description"]
-    pressure = weather_json["main"]["pressure"]
-    iconid = weather_json["weather"][0]["id"]
-    #   
-    #   Content handlers don't appear to work in ujson. So we mung them.
-    #    temp = mungWeather(weather, '"temp":')
-    #    wind = mungWeather(weather, '"speed":')
-    #    humidity = mungWeather(weather, '"humidity":',',')
-    #    description = mungWeather(weather, '"description":',',')
-    #    pressure = mungWeather(weather, '"pressure":')
-    return(temp, wind, humidity, description, pressure, iconid)
-
-def get_wug_weather():
-    pt1 = "http://api.wunderground.com/api/"
-    pt2 = "/q/"
-#    url = pt1+cfg["Openweathercity"]+pt2+cfg["OpenWeatherAPI"]
-    url = pt1+cfg["WundergroundAPI"]+pt2+cfg["WundergroundCity"]
-    req = urlopen(url)
-    ret = req.read()
-    print(ret)
-    weather = ret.decode("utf-8")
-    #    weather_json = ujson.loads(weather, parse_float=parseFloat)
-    weather_json = ujson.loads(weather)
-    temp = round(weather_json["main"]["temp"])
-    wind = round(weather_json["wind"]["speed"])
-    humidity = weather_json["main"]["humidity"]
-    description = weather_json["weather"][0]["description"]
-    pressure = weather_json["main"]["pressure"]
-    iconid = weather_json["weather"][0]["id"]
-    #   
-    #   Content handlers don't appear to work in ujson. So we mung them.
-    #    temp = mungWeather(weather, '"temp":')
-    #    wind = mungWeather(weather, '"speed":')
-    #    humidity = mungWeather(weather, '"humidity":',',')
-    #    description = mungWeather(weather, '"description":',',')
-    #    pressure = mungWeather(weather, '"pressure":')
+def get_weather(service):
+#
+#   Get weather conditions and forecast using API call and REST call.
+#   Returned formats are different between services, hence this routine.
+#
+    if service == "openweathermap":
+        pt1 = "http://api.openweathermap.org/data/2.5/weather?id="
+        pt2 = "&units=metric&cnt=3&appid="
+        url = pt1+cfg["Openweathercity"]+pt2+cfg["OpenWeatherAPI"]
+        req = urlopen(url)
+        ret = req.read()
+        weather = ret.decode("utf-8")
+        weather_json = ujson.loads(weather)
+        temp = round(weather_json["main"]["temp"])
+        wind = round(weather_json["wind"]["speed"])
+        humidity = weather_json["main"]["humidity"]
+        description = weather_json["weather"][0]["description"]
+        pressure = weather_json["main"]["pressure"]
+        iconid = weather_json["weather"][0]["id"]
+    elif service == "weatherunderground":
+        pt1 = "http://api.wunderground.com/api/"
+        pt2 = "/forecast/conditions/q/"
+        url = pt1+cfg["WundergroundAPI"]+pt2+cfg["WundergroundCity"]+".json"
+        req = urlopen(url)
+        ret = req.read()
+        weather = ret.decode("utf-8")
+        weather_json = ujson.loads(weather)
+        temp = weather_json["current_observation"]["temp_c"]
+        wind = weather_json["current_observation"]["wind_kph"]
+        humidity = weather_json["current_observation"]["relative_humidity"]
+        description = weather_json["current_observation"]["weather"]
+        pressure = weather_json["current_observation"]["pressure_mb"]
+        iconid = weather_json["current_observation"]["icon"]
+    else:
+        print("Error: invalid service selected")
     return(temp, wind, humidity, description, pressure, iconid)
 
 def get_calendar():
@@ -160,17 +146,13 @@ def get_calendar():
 def main():
     setup()
     draw_structure()
-#    while True:
-        w=get_owm_weather()
-        v=owmicons.interpret_icons(str(w[5]))
-        eink_set_en_font(ASCII32)
-        eink_disp_string(v["label"], 50, 250)
-        eink_disp_bitmap(v["icon"]+'.BMP', 100, 100)
-        eink_set_en_font(ASCII64)
-        eink_disp_string(str(w[0]), 100, 350)
-        eink_update()
-#        sleep(10)
-#    machine.deepsleep(10000)
-#    print(machine.reset_cause())
+    w=get_weather(service)
+    v=interpret_icons(service,str(w[5]))
+    eink_set_en_font(ASCII32)
+    eink_disp_string(v["label"], 50, 250)
+    eink_disp_bitmap(v["icon"]+'.BMP', 100, 100)
+    eink_set_en_font(ASCII64)
+    eink_disp_string(str(w[0]), 100, 350)
+    eink_update()
 
 main()
