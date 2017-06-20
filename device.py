@@ -1,83 +1,19 @@
 #!/usr/bin/env python
 #
-# e-ink weather calendar
-#
-# Server code to retrieve weather service and parse to a short format for the embedded device. 
-# This runs on the WiPy 2.0; may work on other mPython boards.
+# e-ink weather display
+# Client code to subscribe to weather service topic and display. 
 #
 from eInk import *
-from time import sleep
+from umqtt.simple import MQTTClient
 from weathericons import interpret_icons
 import gc
-import usocket
-import machine
-import ujson
-import urequests as requests
+import time
 CONFIG = 'config.json'
 service = 'weatherunderground'
 Tx='G12'
 Rx='G13'
 uartnum=1
 
-
-def urlopen(url, data=None, method="GET"):
-    if data is not None and method == "GET":
-        method = "POST"
-    try:
-        proto, dummy, host, path = url.split("/", 3)
-    except ValueError:
-        proto, dummy, host = url.split("/", 2)
-        path = ""
-    if proto == "http:":
-        port = 80
-    elif proto == "https:":
-        import ussl
-        port = 443
-    else:
-        raise ValueError("Unsupported protocol: " + proto)
-
-    if ":" in host:
-        host, port = host.split(":", 1)
-        port = int(port)
-
-    ai = usocket.getaddrinfo(host, port)
-    addr = ai[0][4]
-    s = usocket.socket()
-    s.connect(addr)
-    if proto == "https:":
-        s = ussl.wrap_socket(s)
-
-    s.write(method)
-    s.write(b" /")
-    s.write(path)
-    s.write(b" HTTP/1.0\r\nHost: ")
-    s.write(host)
-    s.write(b"\r\n")
-
-    if data:
-        s.write(b"Content-Length: ")
-        s.write(str(len(data)))
-        s.write(b"\r\n")
-    s.write(b"\r\n")
-    if data:
-        s.write(data)
-
-    l = s.readline()
-    protover, status, msg = l.split(None, 2)
-    status = int(status)
-    #print(protover, status, msg)
-    while True:
-        l = s.readline()
-        if not l or l == b"\r\n":
-            break
-        #print(line)
-        if l.startswith(b"Transfer-Encoding:"):
-            if b"chunked" in line:
-                raise ValueError("Unsupported " + l)
-        elif l.startswith(b"Location:"):
-            raise NotImplementedError("Redirects not yet supported")
-
-    return s
 
 def mungWeather(url,text,stop="."):
     index = url.find(text)
@@ -99,56 +35,16 @@ def draw_structure():
     eink_draw_line(300,400,799,400)
     eink_update()
 
-def get_weather(service):
-#
-#   Get weather conditions and forecast using API call and REST call.
-#   Returned formats are different between services, hence this routine.
-#
-    if service == "openweathermap":
-        pt1 = "http://api.openweathermap.org/data/2.5/weather?id="
-        pt2 = "&units=metric&cnt=3&appid="
-        url = pt1+cfg["Openweathercity"]+pt2+cfg["OpenWeatherAPI"]
-        r = requests.get(url)
-        weather_json = r.json()
-        r.close()
-        temp = round(weather_json["main"]["temp"])
-        wind = round(weather_json["wind"]["speed"])
-        humidity = weather_json["main"]["humidity"]
-        description = weather_json["weather"][0]["description"]
-        pressure = weather_json["main"]["pressure"]
-        iconid = weather_json["weather"][0]["id"]
-    elif service == "weatherunderground":
-        pt1 = "http://api.wunderground.com/api/"
-        pt2 = "/forecast/conditions/q/"
-        url = pt1+cfg["WundergroundAPI"]+pt2+cfg["WundergroundCity"]+".json"
-#        req = urlopen(url)
-#        ret = req.read()
-#        weather = ret.decode("utf-8")
-#        weather_json = ujson.loads(weather)
-        r = requests.get(url)
-        weather_json = r.json()
-        r.close()
-        temperature = weather_json["current_observation"]["temp_c"]
-        wind = weather_json["current_observation"]["wind_kph"]
-        humidity = weather_json["current_observation"]["relative_humidity"]
-        description = weather_json["current_observation"]["weather"]
-        pressure = weather_json["current_observation"]["pressure_mb"]
-        iconid = weather_json["current_observation"]["icon"]
-        forecast = {}
-        for i in range(1,4):
-            forecast[i] = {}
-            forecast[i]["high"] = weather_json["forecast"]["simpleforecast"]["forecastday"][i]["high"]["celsius"]
-            forecast[i]["low"]  = weather_json["forecast"]["simpleforecast"]["forecastday"][i]["low"]["celsius"]
-    else:
-        print("Error: invalid service selected")
-    return(temperature, wind, humidity, description, pressure, iconid, forecast)
+def weather_msg(topic, msg):
+    print((topic, msg))
 
-def get_calendar():
-    pass
-
-def main():
+def main(server="lonna"):
     setup()
     draw_structure()
+    c = MQTTClient("eink_display", server)
+    c.set_callback(weather_msg)
+    c.connect()
+    c.subscribe(b"raw/weather")
     while True:
         gc.collect()
         w=get_weather(service)
@@ -165,5 +61,11 @@ def main():
             eink_disp_string(w[6][i]["high"],600,y)
         eink_update()
         sleep(55)
+        if True:
+            c.wait_msg()
+        else:
+            c.check_msg()
+            time.sleep(55)
+    c.disconnect()
 
 main()
