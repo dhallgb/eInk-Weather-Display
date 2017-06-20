@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 #
-# Minimal weather calendar for the Waveshare 4.3 inch e-ink display
-# This runs on the WiPy 2.0; floats will not work on the WiPy 1.0. 
-# May work on other mPython boards.
+# e-ink weather calendar
 #
-# Gets the weather data from various weather services.
-# TBD: get calendar data from Google.
+# Server code to retrieve weather service and parse to a short format for the embedded device. 
+# This runs on the WiPy 2.0; may work on other mPython boards.
 #
 from eInk import *
 from time import sleep
 from weathericons import interpret_icons
+import gc
+import usocket
 import machine
 import ujson
 import urequests as requests
@@ -19,10 +19,8 @@ Tx='G12'
 Rx='G13'
 uartnum=1
 
-def parseFloat(f):
-    return(int(f.split('.')[0]))
 
-#def urlopen(url, data=None, method="GET"):
+def urlopen(url, data=None, method="GET"):
     if data is not None and method == "GET":
         method = "POST"
     try:
@@ -123,6 +121,10 @@ def get_weather(service):
         pt1 = "http://api.wunderground.com/api/"
         pt2 = "/forecast/conditions/q/"
         url = pt1+cfg["WundergroundAPI"]+pt2+cfg["WundergroundCity"]+".json"
+#        req = urlopen(url)
+#        ret = req.read()
+#        weather = ret.decode("utf-8")
+#        weather_json = ujson.loads(weather)
         r = requests.get(url)
         weather_json = r.json()
         r.close()
@@ -147,19 +149,21 @@ def get_calendar():
 def main():
     setup()
     draw_structure()
-    w=get_weather(service)
-    v=interpret_icons(service,str(w[5]))
-    print(w)
-    eink_set_en_font(ASCII32)
-    eink_disp_string(v["label"], 50, 250)
-    eink_disp_bitmap(v["icon"]+'.BMP', 100, 100)
-    eink_set_en_font(ASCII64)
-    eink_disp_string(str(w[0]), 100, 350)
-    for i in range(1,4):
-        y = ((i*2)-1)*100
-        eink_disp_string(w[6][i]["low"],400,y)
-        eink_disp_string(w[6][i]["high"],600,y)
-
-    eink_update()
+    while True:
+        gc.collect()
+        w=get_weather(service)
+        v=interpret_icons(service,str(w[5]))
+        print(w)
+        eink_set_en_font(ASCII32)
+        eink_disp_string(v["label"], 50, 250)
+        eink_disp_bitmap(v["icon"]+'.BMP', 100, 100)
+        eink_set_en_font(ASCII64)
+        eink_disp_string(str(w[0]), 100, 350)
+        for i in range(1,4):
+            y = ((i*2)-1)*100
+            eink_disp_string(w[6][i]["low"],400,y)
+            eink_disp_string(w[6][i]["high"],600,y)
+        eink_update()
+        sleep(55)
 
 main()
