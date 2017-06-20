@@ -1,105 +1,21 @@
 #!/usr/bin/env python
 #
 # Minimal weather calendar for the Waveshare 4.3 inch e-ink display
-# This runs on the WiPy 2.0; floats will not work on the WiPy 1.0. 
-# May work on other mPython boards.
+# Server component
 #
 # Gets the weather data from various weather services.
-# TBD: get calendar data from Google.
 #
-from eInk import *
 from time import sleep
-from weathericons import interpret_icons
-import gc
-import usocket
-import machine
-import ujson
-import urequests as requests
+import json
+import requests
 CONFIG = 'config.json'
 service = 'weatherunderground'
-Tx='G12'
-Rx='G13'
-uartnum=1
-
-
-def urlopen(url, data=None, method="GET"):
-    if data is not None and method == "GET":
-        method = "POST"
-    try:
-        proto, dummy, host, path = url.split("/", 3)
-    except ValueError:
-        proto, dummy, host = url.split("/", 2)
-        path = ""
-    if proto == "http:":
-        port = 80
-    elif proto == "https:":
-        import ussl
-        port = 443
-    else:
-        raise ValueError("Unsupported protocol: " + proto)
-
-    if ":" in host:
-        host, port = host.split(":", 1)
-        port = int(port)
-
-    ai = usocket.getaddrinfo(host, port)
-    addr = ai[0][4]
-    s = usocket.socket()
-    s.connect(addr)
-    if proto == "https:":
-        s = ussl.wrap_socket(s)
-
-    s.write(method)
-    s.write(b" /")
-    s.write(path)
-    s.write(b" HTTP/1.0\r\nHost: ")
-    s.write(host)
-    s.write(b"\r\n")
-
-    if data:
-        s.write(b"Content-Length: ")
-        s.write(str(len(data)))
-        s.write(b"\r\n")
-    s.write(b"\r\n")
-    if data:
-        s.write(data)
-
-    l = s.readline()
-    protover, status, msg = l.split(None, 2)
-    status = int(status)
-    #print(protover, status, msg)
-    while True:
-        l = s.readline()
-        if not l or l == b"\r\n":
-            break
-        #print(line)
-        if l.startswith(b"Transfer-Encoding:"):
-            if b"chunked" in line:
-                raise ValueError("Unsupported " + l)
-        elif l.startswith(b"Location:"):
-            raise NotImplementedError("Redirects not yet supported")
-
-    return s
-
-def mungWeather(url,text,stop="."):
-    index = url.find(text)
-    index += len(text)
-    index2 = url.find(stop, index)
-    return(url[index:index2])
 
 def setup():
     global cfg
     f = open(CONFIG, 'r')
     x = f.readall()
-    cfg = ujson.loads(x)
-    eink_init()
-    eink_clear()
-
-def draw_structure():
-    eink_draw_line(300,0,300,599)
-    eink_draw_line(300,200,799,200)
-    eink_draw_line(300,400,799,400)
-    eink_update()
+    cfg = json.loads(x)
 
 def get_weather(service):
 #
@@ -123,10 +39,6 @@ def get_weather(service):
         pt1 = "http://api.wunderground.com/api/"
         pt2 = "/forecast/conditions/q/"
         url = pt1+cfg["WundergroundAPI"]+pt2+cfg["WundergroundCity"]+".json"
-#        req = urlopen(url)
-#        ret = req.read()
-#        weather = ret.decode("utf-8")
-#        weather_json = ujson.loads(weather)
         r = requests.get(url)
         weather_json = r.json()
         r.close()
@@ -145,27 +57,12 @@ def get_weather(service):
         print("Error: invalid service selected")
     return(temperature, wind, humidity, description, pressure, iconid, forecast)
 
-def get_calendar():
-    pass
-
 def main():
     setup()
-    draw_structure()
     while True:
-        gc.collect()
         w=get_weather(service)
         v=interpret_icons(service,str(w[5]))
         print(w)
-        eink_set_en_font(ASCII32)
-        eink_disp_string(v["label"], 50, 250)
-        eink_disp_bitmap(v["icon"]+'.BMP', 100, 100)
-        eink_set_en_font(ASCII64)
-        eink_disp_string(str(w[0]), 100, 350)
-        for i in range(1,4):
-            y = ((i*2)-1)*100
-            eink_disp_string(w[6][i]["low"],400,y)
-            eink_disp_string(w[6][i]["high"],600,y)
-        eink_update()
         sleep(55)
 
 main()
