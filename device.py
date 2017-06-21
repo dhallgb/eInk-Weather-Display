@@ -6,6 +6,7 @@
 from eInk import *
 from umqtt import *
 from weathericons import interpret_icons
+import pycom
 import gc
 import ujson
 import time
@@ -14,6 +15,7 @@ Rx='G13'
 server='lonna'
 service='weatherunderground'
 uartnum=1
+pycom.heartbeat(False)
 
 def setup():
     eink_init()
@@ -24,7 +26,10 @@ def setup():
     eink_update()
 
 def weather_msg(topic, msg):
+    pycom.rgbled(0x007f00)
+    pycom.rgbled(0x000000)
     weather=ujson.loads(msg)
+    print(weather["description"])
     icon=interpret_icons(service,weather["iconid"])
     eink_set_en_font(ASCII32)
     eink_disp_string(icon["label"], 50, 250)
@@ -46,8 +51,10 @@ def main():
     while True:
         gc.collect()
         if True:
+            print("one>>",gc.free())
             c.wait_msg()
         else:
+            print("two>>",gc.free())
             c.check_msg()
             time.sleep(55)
     c.disconnect()
