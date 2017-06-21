@@ -7,6 +7,7 @@ from eInk import *
 from umqtt import *
 from weathericons import interpret_icons
 import gc
+import ujson
 import time
 Tx='G12'
 Rx='G13'
@@ -22,18 +23,18 @@ def setup():
     eink_draw_line(300,400,799,400)
     eink_update()
 
-def weather_msg(topic, w):
-    print(w)
-    v=interpret_icons(service,str(w[5]))
+def weather_msg(topic, msg):
+    w=ujson.loads(msg)
+    v=interpret_icons(service,w["iconid"])
     eink_set_en_font(ASCII32)
     eink_disp_string(v["label"], 50, 250)
     eink_disp_bitmap(v["icon"]+'.BMP', 100, 100)
     eink_set_en_font(ASCII64)
-    eink_disp_string(str(w[0]), 100, 350)
+    eink_disp_string(str(w["temperature"]), 100, 350)
     for i in range(1,4):
         y = ((i*2)-1)*100
-        eink_disp_string(w[6][i]["low"],400,y)
-        eink_disp_string(w[6][i]["high"],600,y)
+        eink_disp_string(str(w["forecast"][i]["low"]),400,y)
+        eink_disp_string(str(w["forecast"][i]["high"]),600,y)
     eink_update()
 
 def main():

@@ -9,8 +9,8 @@ A simple weather display using weather and forecast icons to display on an Waves
 
 ## Components
 * NodeRED flow publishing to MQTT topic __raw/weather__
-** NodeRED new node __node-red-contrib-file-function__
-** NodeREd new node __node-red-contrib-config__
+-- NodeRED new node __node-red-contrib-file-function__
+-- NodeREd new node __node-red-contrib-config__
 * embedded microprocessor driving Waveshare e-ink display, such as the ESP8266 or WiPy2
 * microPython eInk library from https://github.com/dhallgb/eInk-micropython
 
