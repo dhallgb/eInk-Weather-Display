@@ -1,0 +1,482 @@
+
+{
+  "response": {
+  "version":"0.1",
+  "termsofService":"http://www.wunderground.com/weather/api/d/terms.html",
+  "features": {
+  "forecast": 1
+  ,
+  "conditions": 1
+  }
+	}
+  ,	"current_observation": {
+		"image": {
+		"url":"http://icons.wxug.com/graphics/wu2/logo_130x80.png",
+		"title":"Weather Underground",
+		"link":"http://www.wunderground.com"
+		},
+		"display_location": {
+		"full":"Fareham, United Kingdom",
+		"city":"Fareham",
+		"state":"HAM",
+		"state_name":"United Kingdom",
+		"country":"UK",
+		"country_iso3166":"GB",
+		"zip":"00000",
+		"magic":"12",
+		"wmo":"03867",
+		"latitude":"50.84999847",
+		"longitude":"-1.17999995",
+		"elevation":"2.1"
+		},
+		"observation_location": {
+		"full":"Lower Quay, Fareham, UK, Fareham, ",
+		"city":"Lower Quay, Fareham, UK, Fareham",
+		"state":"",
+		"country":"GB",
+		"country_iso3166":"GB",
+		"latitude":"50.846653",
+		"longitude":"-1.178669",
+		"elevation":"30 ft"
+		},
+		"estimated": {
+		},
+		"station_id":"IFAREHAM12",
+		"observation_time":"Last Updated on June 21, 4:58 PM BST",
+		"observation_time_rfc822":"Wed, 21 Jun 2017 16:58:25 +0100",
+		"observation_epoch":"1498060705",
+		"local_time_rfc822":"Wed, 21 Jun 2017 16:59:12 +0100",
+		"local_epoch":"1498060752",
+		"local_tz_short":"BST",
+		"local_tz_long":"Europe/London",
+		"local_tz_offset":"+0100",
+		"weather":"Clear",
+		"temperature_string":"76.2 F (24.6 C)",
+		"temp_f":76.2,
+		"temp_c":24.6,
+		"relative_humidity":"72%",
+		"wind_string":"From the ESE at 7.0 MPH Gusting to 9.0 MPH",
+		"wind_dir":"ESE",
+		"wind_degrees":115,
+		"wind_mph":7.0,
+		"wind_gust_mph":"9.0",
+		"wind_kph":11.3,
+		"wind_gust_kph":"14.5",
+		"pressure_mb":"1012",
+		"pressure_in":"29.89",
+		"pressure_trend":"0",
+		"dewpoint_string":"67 F (19 C)",
+		"dewpoint_f":67,
+		"dewpoint_c":19,
+		"heat_index_string":"NA",
+		"heat_index_f":"NA",
+		"heat_index_c":"NA",
+		"windchill_string":"NA",
+		"windchill_f":"NA",
+		"windchill_c":"NA",
+		"feelslike_string":"76.2 F (24.6 C)",
+		"feelslike_f":"76.2",
+		"feelslike_c":"24.6",
+		"visibility_mi":"N/A",
+		"visibility_km":"N/A",
+		"solarradiation":"--",
+		"UV":"-1","precip_1hr_string":"0.00 in ( 0 mm)",
+		"precip_1hr_in":"0.00",
+		"precip_1hr_metric":" 0",
+		"precip_today_string":"0.00 in (0 mm)",
+		"precip_today_in":"0.00",
+		"precip_today_metric":"0",
+		"icon":"clear",
+		"icon_url":"http://icons.wxug.com/i/c/k/clear.gif",
+		"forecast_url":"http://www.wunderground.com/global/stations/03867.html",
+		"history_url":"http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=IFAREHAM12",
+		"ob_url":"http://www.wunderground.com/cgi-bin/findweather/getForecast?query=50.846653,-1.178669",
+		"nowcast":""
+	}
+		,
+	"forecast":{
+		"txt_forecast": {
+		"date":"4:01 PM BST",
+		"forecastday": [
+		{
+		"period":0,
+		"icon":"clear",
+		"icon_url":"http://icons.wxug.com/i/c/k/clear.gif",
+		"title":"Wednesday",
+		"fcttext":"A few clouds. Lows overnight in the low 60s.",
+		"fcttext_metric":"A few clouds. Low 16C.",
+		"pop":"20"
+		}
+		,
+		{
+		"period":1,
+		"icon":"nt_clear",
+		"icon_url":"http://icons.wxug.com/i/c/k/nt_clear.gif",
+		"title":"Wednesday Night",
+		"fcttext":"Mainly clear. Muggy. Low 61F. Winds SW at 10 to 15 mph.",
+		"fcttext_metric":"Mainly clear. Muggy. Low 16C. Winds SW at 10 to 15 km/h.",
+		"pop":"20"
+		}
+		,
+		{
+		"period":2,
+		"icon":"chancerain",
+		"icon_url":"http://icons.wxug.com/i/c/k/chancerain.gif",
+		"title":"Thursday",
+		"fcttext":"Rain showers early with some sunshine later in the day. Warm. High near 75F. Winds WSW at 10 to 20 mph. Chance of rain 50%.",
+		"fcttext_metric":"Rain showers early with some sunshine later in the day. Warm. High 24C. Winds WSW at 15 to 30 km/h. Chance of rain 50%.",
+		"pop":"50"
+		}
+		,
+		{
+		"period":3,
+		"icon":"nt_partlycloudy",
+		"icon_url":"http://icons.wxug.com/i/c/k/nt_partlycloudy.gif",
+		"title":"Thursday Night",
+		"fcttext":"Partly cloudy skies. Slight chance of a rain shower. Low 56F. Winds WNW at 10 to 15 mph.",
+		"fcttext_metric":"Partly cloudy skies. Slight chance of a rain shower. Low 13C. Winds WNW at 15 to 25 km/h.",
+		"pop":"10"
+		}
+		,
+		{
+		"period":4,
+		"icon":"mostlycloudy",
+		"icon_url":"http://icons.wxug.com/i/c/k/mostlycloudy.gif",
+		"title":"Friday",
+		"fcttext":"Partly cloudy skies during the morning hours will become overcast in the afternoon. High 71F. Winds WSW at 15 to 25 mph.",
+		"fcttext_metric":"Partly cloudy skies in the morning will give way to cloudy skies during the afternoon. High 22C. Winds WSW at 25 to 40 km/h.",
+		"pop":"10"
+		}
+		,
+		{
+		"period":5,
+		"icon":"nt_chancerain",
+		"icon_url":"http://icons.wxug.com/i/c/k/nt_chancerain.gif",
+		"title":"Friday Night",
+		"fcttext":"Mostly cloudy with some showers late. Low 61F. Winds WSW at 10 to 20 mph. Chance of rain 40%.",
+		"fcttext_metric":"Increasing clouds with showers arriving sometime after midnight. Low 16C. Winds WSW at 15 to 30 km/h. Chance of rain 40%.",
+		"pop":"40"
+		}
+		,
+		{
+		"period":6,
+		"icon":"mostlycloudy",
+		"icon_url":"http://icons.wxug.com/i/c/k/mostlycloudy.gif",
+		"title":"Saturday",
+		"fcttext":"Mainly cloudy. Slight chance of a rain shower. High 68F. Winds W at 10 to 20 mph.",
+		"fcttext_metric":"More clouds than sun. Slight chance of a rain shower. High around 20C. Winds W at 15 to 30 km/h.",
+		"pop":"10"
+		}
+		,
+		{
+		"period":7,
+		"icon":"nt_partlycloudy",
+		"icon_url":"http://icons.wxug.com/i/c/k/nt_partlycloudy.gif",
+		"title":"Saturday Night",
+		"fcttext":"Partly cloudy skies. Muggy. Low 57F. Winds W at 10 to 20 mph.",
+		"fcttext_metric":"Some clouds early will give way to generally clear conditions overnight. Muggy. Low 14C. Winds W at 15 to 30 km/h.",
+		"pop":"20"
+		}
+		]
+		},
+		"simpleforecast": {
+		"forecastday": [
+		{"date":{
+	"epoch":"1498068000",
+	"pretty":"7:00 PM BST on June 21, 2017",
+	"day":21,
+	"month":6,
+	"year":2017,
+	"yday":171,
+	"hour":19,
+	"min":"00",
+	"sec":0,
+	"isdst":"1",
+	"monthname":"June",
+	"monthname_short":"Jun",
+	"weekday_short":"Wed",
+	"weekday":"Wednesday",
+	"ampm":"PM",
+	"tz_short":"BST",
+	"tz_long":"Europe/London"
+},
+		"period":1,
+		"high": {
+		"fahrenheit":"81",
+		"celsius":"27"
+		},
+		"low": {
+		"fahrenheit":"61",
+		"celsius":"16"
+		},
+		"conditions":"Clear",
+		"icon":"clear",
+		"icon_url":"http://icons.wxug.com/i/c/k/clear.gif",
+		"skyicon":"",
+		"pop":20,
+		"qpf_allday": {
+		"in": 0.00,
+		"mm": 0
+		},
+		"qpf_day": {
+		"in": null,
+		"mm": null
+		},
+		"qpf_night": {
+		"in": 0.00,
+		"mm": 0
+		},
+		"snow_allday": {
+		"in": 0.0,
+		"cm": 0.0
+		},
+		"snow_day": {
+		"in": null,
+		"cm": null
+		},
+		"snow_night": {
+		"in": 0.0,
+		"cm": 0.0
+		},
+		"maxwind": {
+		"mph": 14,
+		"kph": 22,
+		"dir": "",
+		"degrees": 0
+		},
+		"avewind": {
+		"mph": 6,
+		"kph": 9,
+		"dir": "East",
+		"degrees": 87
+		},
+		"avehumidity": 81,
+		"maxhumidity": 0,
+		"minhumidity": 0
+		}
+		,
+		{"date":{
+	"epoch":"1498154400",
+	"pretty":"7:00 PM BST on June 22, 2017",
+	"day":22,
+	"month":6,
+	"year":2017,
+	"yday":172,
+	"hour":19,
+	"min":"00",
+	"sec":0,
+	"isdst":"1",
+	"monthname":"June",
+	"monthname_short":"Jun",
+	"weekday_short":"Thu",
+	"weekday":"Thursday",
+	"ampm":"PM",
+	"tz_short":"BST",
+	"tz_long":"Europe/London"
+},
+		"period":2,
+		"high": {
+		"fahrenheit":"75",
+		"celsius":"24"
+		},
+		"low": {
+		"fahrenheit":"56",
+		"celsius":"13"
+		},
+		"conditions":"Chance of Rain",
+		"icon":"chancerain",
+		"icon_url":"http://icons.wxug.com/i/c/k/chancerain.gif",
+		"skyicon":"",
+		"pop":50,
+		"qpf_allday": {
+		"in": 0.06,
+		"mm": 2
+		},
+		"qpf_day": {
+		"in": 0.06,
+		"mm": 2
+		},
+		"qpf_night": {
+		"in": 0.00,
+		"mm": 0
+		},
+		"snow_allday": {
+		"in": 0.0,
+		"cm": 0.0
+		},
+		"snow_day": {
+		"in": 0.0,
+		"cm": 0.0
+		},
+		"snow_night": {
+		"in": 0.0,
+		"cm": 0.0
+		},
+		"maxwind": {
+		"mph": 20,
+		"kph": 32,
+		"dir": "WSW",
+		"degrees": 256
+		},
+		"avewind": {
+		"mph": 14,
+		"kph": 23,
+		"dir": "WSW",
+		"degrees": 256
+		},
+		"avehumidity": 71,
+		"maxhumidity": 0,
+		"minhumidity": 0
+		}
+		,
+		{"date":{
+	"epoch":"1498240800",
+	"pretty":"7:00 PM BST on June 23, 2017",
+	"day":23,
+	"month":6,
+	"year":2017,
+	"yday":173,
+	"hour":19,
+	"min":"00",
+	"sec":0,
+	"isdst":"1",
+	"monthname":"June",
+	"monthname_short":"Jun",
+	"weekday_short":"Fri",
+	"weekday":"Friday",
+	"ampm":"PM",
+	"tz_short":"BST",
+	"tz_long":"Europe/London"
+},
+		"period":3,
+		"high": {
+		"fahrenheit":"71",
+		"celsius":"22"
+		},
+		"low": {
+		"fahrenheit":"61",
+		"celsius":"16"
+		},
+		"conditions":"Mostly Cloudy",
+		"icon":"mostlycloudy",
+		"icon_url":"http://icons.wxug.com/i/c/k/mostlycloudy.gif",
+		"skyicon":"",
+		"pop":10,
+		"qpf_allday": {
+		"in": 0.00,
+		"mm": 0
+		},
+		"qpf_day": {
+		"in": 0.00,
+		"mm": 0
+		},
+		"qpf_night": {
+		"in": 0.00,
+		"mm": 0
+		},
+		"snow_allday": {
+		"in": 0.0,
+		"cm": 0.0
+		},
+		"snow_day": {
+		"in": 0.0,
+		"cm": 0.0
+		},
+		"snow_night": {
+		"in": 0.0,
+		"cm": 0.0
+		},
+		"maxwind": {
+		"mph": 25,
+		"kph": 40,
+		"dir": "WSW",
+		"degrees": 252
+		},
+		"avewind": {
+		"mph": 17,
+		"kph": 27,
+		"dir": "WSW",
+		"degrees": 252
+		},
+		"avehumidity": 67,
+		"maxhumidity": 0,
+		"minhumidity": 0
+		}
+		,
+		{"date":{
+	"epoch":"1498327200",
+	"pretty":"7:00 PM BST on June 24, 2017",
+	"day":24,
+	"month":6,
+	"year":2017,
+	"yday":174,
+	"hour":19,
+	"min":"00",
+	"sec":0,
+	"isdst":"1",
+	"monthname":"June",
+	"monthname_short":"Jun",
+	"weekday_short":"Sat",
+	"weekday":"Saturday",
+	"ampm":"PM",
+	"tz_short":"BST",
+	"tz_long":"Europe/London"
+},
+		"period":4,
+		"high": {
+		"fahrenheit":"68",
+		"celsius":"20"
+		},
+		"low": {
+		"fahrenheit":"57",
+		"celsius":"14"
+		},
+		"conditions":"Mostly Cloudy",
+		"icon":"mostlycloudy",
+		"icon_url":"http://icons.wxug.com/i/c/k/mostlycloudy.gif",
+		"skyicon":"",
+		"pop":10,
+		"qpf_allday": {
+		"in": 0.00,
+		"mm": 0
+		},
+		"qpf_day": {
+		"in": 0.00,
+		"mm": 0
+		},
+		"qpf_night": {
+		"in": 0.00,
+		"mm": 0
+		},
+		"snow_allday": {
+		"in": 0.0,
+		"cm": 0.0
+		},
+		"snow_day": {
+		"in": 0.0,
+		"cm": 0.0
+		},
+		"snow_night": {
+		"in": 0.0,
+		"cm": 0.0
+		},
+		"maxwind": {
+		"mph": 20,
+		"kph": 32,
+		"dir": "W",
+		"degrees": 259
+		},
+		"avewind": {
+		"mph": 14,
+		"kph": 23,
+		"dir": "W",
+		"degrees": 259
+		},
+		"avehumidity": 70,
+		"maxhumidity": 0,
+		"minhumidity": 0
+		}
+		]
+		}
+	}
+}

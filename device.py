@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 #
 # e-ink weather display
-# Client code to subscribe to weather service topic and display. 
+# Client code to subscribe to weather service MQTT topic, and display. 
 #
 from eInk import *
-from umqtt.simple import MQTTClient
+from umqtt import *
 from weathericons import interpret_icons
 import gc
 import time
 Tx='G12'
 Rx='G13'
 server='lonna'
-service='wunderground'
+service='weatherunderground'
 uartnum=1
 
 def setup():
@@ -22,9 +22,9 @@ def setup():
     eink_draw_line(300,400,799,400)
     eink_update()
 
-def weather_msg(topic, msg):
-    v=interpret_icons(service,str(msg[5]))
-    print(msg)
+def weather_msg(topic, w):
+    print(w)
+    v=interpret_icons(service,str(w[5]))
     eink_set_en_font(ASCII32)
     eink_disp_string(v["label"], 50, 250)
     eink_disp_bitmap(v["icon"]+'.BMP', 100, 100)

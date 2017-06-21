@@ -1,7 +1,0 @@
-{
-  "GoogleAPIkey": "243kl5j23lkjdl2lk3j0l234lskdjlfkj",
-  "OpenweatherAPI": "your-key-goes-here",
-  "Openweathercity": "city-code",
-  "WundergroundAPI":"your-key-goes-here"
-  "WundergroundCity":"CountryCode/City"  
-}
